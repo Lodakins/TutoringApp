@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const schema = mongoose.Schema;
 
 
-const userSchema = new schema({
+const tutorSchema = new schema({
     firstName:{
         type:String,
         lowercase:true,
@@ -34,7 +34,13 @@ const userSchema = new schema({
     phoneNumber:{
         type:String
     },
+    isAdmin:{
+        type: Boolean,
+        default: false
+    },
+    subjects:[],
     lessons: [],
+    category: [],
     active:{
         type:Boolean,
         required:true,
@@ -42,4 +48,4 @@ const userSchema = new schema({
     }
 }, {timestamps:true});
 
-module.exports = mongoose.model("User",userSchema)
+module.exports = mongoose.model("Tutors",tutorSchema)
