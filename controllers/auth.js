@@ -66,34 +66,3 @@ exports.login = (req,res,next)=>{
 }
 
 
-exports.searchTutors=(req,res,next)=>{
-    let name = req.query.firstName;
-    let userId = req.body.userId;
-
-        if(!userId){
-            return res.send({status:false,message:"userId parameter missing"});
-        }
-    if(verifyToken(req,res)){
-       authenticateUser(res,req,userId).then(user=>{
-        if(user.role ==="admin" || user ==="student"){
-            if(!name){
-                 return res.send({status:false,message:"query parameter firstName missing"});
-                 }
-             User.find({firstName:name}).where({ role: 'tutor' }).sort({lastName:"asc"}).exec().then(result=>{
-                    if(result.length ===0){
-                         return res.send({status:false,message:"Tutors not found"});
-                     }
-                     res.send({status:true,result});
-    
-                }).catch(err=>{
-                  console.log(err)
-                     return res.send({status:false,message:"Something went wrong"});
-             })
-         }else{
-                 return res.send({status:false,message:"No access right"});
-        }
-    })
-    
-  }
-
-}

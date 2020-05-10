@@ -1,7 +1,11 @@
 const Tutor = require('../models/tutor');
 const Categories = require("../models/category");
+const Subject = require("../models/subject");
+const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const { signToken, verifyToken} = require("../middleware/authJWT");
+const { authenticateAdmin, authenticateUser } = require("../middleware/authUser");
+
 
 
 
@@ -63,3 +67,89 @@ exports.loginTutor=(req,res,next)=>{
         }
     })
 }
+
+
+exports.searchTutors=(req,res,next)=>{
+    let name = req.query.firstName.toLowerCase();
+    let userId = req.body.userId;
+
+        if(!userId){
+            return res.send({status:false,message:"userId parameter missing"});
+        }
+    if(verifyToken(req,res)){
+       if(authenticateUser(req,res,userId) || authenticateAdmin(req,res,userId)){
+            if(!name){
+                 return res.send({status:false,message:"query parameter firstName missing"});
+                 }
+             Tutor.find({firstName:name}).sort({lastName:"asc"}).exec().then(result=>{
+                    if(result.length ===0){
+                         return res.send({status:false,message:"Tutors not found"});
+                     }
+                     res.send({status:true,result});
+    
+                }).catch(err=>{
+                  console.log(err)
+                     return res.send({status:false,message:"Something went wrong"});
+             })
+         }else{
+                 return res.send({status:false,message:"No access right"});
+        }
+    
+  }
+
+}
+
+exports.registerSubject=(req,res,next)=>{
+    let categoryId = req.params.categoryId;
+    let subjectId= req.params.subjectId;
+    let userId = req.body.userId;
+
+    if(!userId || !categoryId || !subjectId){
+        return res.send({status:false,message:"One or more parameter missing"});
+    }
+
+    if(verifyToken(req,res)){
+            if(!authenticateAdmin(req,res,userId)){
+                
+                Categories.findOne({_id: categoryId}).select("-_id subjects").populate({path:"subjects"}).exec().then(result=>{
+                    if(result.length === 0){
+                        return res.send({status:false, message:"Invalid Category Selected"})
+                    }
+                    let response = result.subjects;
+                        let subject=null;
+                    for(let item of response){
+                        let id = item._id.toString();
+                        if(id == subjectId){
+                            subject = item;
+                           
+                        }
+                    }
+
+                    if(subject !== null){
+                        Tutor.findByIdAndUpdate(userId,{
+                            $push: {
+                              subjects: subject
+                            }
+                          },
+                          { new: true, useFindAndModify: false }).then(result=>{
+                                Subject.findByIdAndUpdate(subjectId,{
+                                    $push: {
+                                        tutors: subject
+                                      }
+                                })
+                                return res.send({status:true,message:"registerd successfully"});
+                          });
+                    }else{
+                    return  res.send({status:false,message:" Subject could not be found"});
+                    }
+        
+            }).catch(err=>{
+                console.log(err);
+                return res.send({status:false,message:"Invalid Category Parameter"});
+            })
+
+        }  
+
+   }
+
+};

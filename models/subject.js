@@ -24,7 +24,7 @@ const Subject = new Schema({
         tutors:[
             {
               type:mongoose.Schema.Types.ObjectId,
-              ref:"User" 
+              ref:"Tutor" 
             }
         ]
 });

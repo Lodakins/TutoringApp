@@ -1,20 +1,35 @@
 const User = require("../models/user");
+const Tutor = require('../models/tutor');
 
 
 const ROLES=['student','tutor'];
 
 
-exports.authenticateUser = async (req,res,userId)=>{
-    let user =await User.findOne({_id:userId});
-        return user.role;
+exports.authenticateUser =  (req,res,userId)=>{
+    let user = User.findOne({_id:userId});
+        if(user){
+            return user;
+        }else{
+            return false;
+        }
            // if(user){
     //             return true;
     //         }else{
-    //             return res.send({status:false,message:"You are not authenticate to view this file"});
+    //            
     //         }
     // }).catch(err=>{
     //     return res.send({status:false,message:"Something went wrong with validating user"});
     // })
+
+}
+exports.authenticateAdmin=  (req,res,userId)=>{
+    let tutor =  Tutor.findOne({_id:userId});
+        if(tutor){
+            return tutor.isAdmin;
+        }else{
+            return false;
+        }
+       
 
 }
 

@@ -2,15 +2,14 @@ const express = require('express');
 const mongoose = require("mongoose");
 const authRoutes = require('./routes/auth');
 require('dotenv').config();
+const bodyParser = require("body-parser");
 
 
 const app = express();
 
-// const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImZlZWxhbmNlQGdtYWlsLmNvbSIsImlkIjoiNWViNTFjYmY4OGE4MzAzNGNjOGIwY2I4IiwiaWF0IjoxNTg4OTI4MzQ5LCJleHAiOjE1ODg5MzE5NDl9.s16ivtvSD-SFnvovzi41b_-Qf3mPxQIL2bXUkrLQeAw
-
 const apiKey = process.env.API_KEY;
 
-
+app.use(bodyParser.json());
 app.use(express.json());
 app.use(express.urlencoded({extended:false}));
 app.use(authRoutes);

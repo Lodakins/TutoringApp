@@ -12,15 +12,13 @@ exports.createCategories=(req,res,next)=>{
 
     Categories.findOne({categoryName:name}).then(cat=>{
             if(cat){
-                console.log(cat)
                  res.send({status:false,message:"Category already Exist"});
                  return;
             }
             let category = new Categories({categoryName: name,categoryDescription: description});
                 category.save().then(result=>{
-                    return res.send({status:true,message:"Categories create successfull"});
+                    return res.send({status:true,message:"Categories created successfull"});
                 }).catch(err=>{
-                    console.log(err);
                     return res.send({status:false,message:"Categories went wrong"})
                 })
     }).catch(err=>{return res.send({status:false,message:"Something went wrong"})})
@@ -34,6 +32,6 @@ exports.showAllCategories=(req,res,next)=>{
                  if(cat){
                      return res.send({status:true, categories:cat})
                  }
-             }).catch(err=>{res.send({status:false, message: "Something went wrong"}) });
+             }).catch(err=>{ return res.send({status:false, message: "Something went wrong"}) });
         }
 }

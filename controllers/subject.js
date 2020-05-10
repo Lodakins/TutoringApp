@@ -58,13 +58,13 @@ exports.createSubjectByCategory=(req,res,next)=>{
 
 
 exports.showSubjectByCategory=(req,res,next)=>{
-    let category = req.params.categoryName.toLowerCase();
+    let category = req.params.category.toLowerCase();
 
     if(verifyToken(req,res)){
         if(!category){
             return res.send({status:false, message:"Category parameter missing"});
         }
-        Categories.find({categoryName: category}).select("-_id subjects").populate({path:"subjects"}).populate({path:"category"}).exec().then(result=>{
+        Categories.find({categoryName: category}).populate({path:"subjects"}).select("-_id subjects").exec().then(result=>{
                 if(result.length === 0){
                     return res.send({status:false, message:"Invalid Category Selected"})
                 }
@@ -93,10 +93,7 @@ exports.getSubjectById=(req,res,next)=>{
                 console.log(response);
             for(let item of response){
                 let id = item._id.toString();
-                console.log("itemId: "+ id+ " subjectId: "+subjectid);
-                console.log(id === subjectid)
                 if(id == subjectid){
-                        console.log("here 0000")
                     return res.send({status:true,subject: item})
                 }
             }
@@ -121,7 +118,7 @@ exports.searchSubject=(req,res,next)=>{
 
     Subject.find({subjectName:name}).sort({subjectName:"asc"}).exec().then(result=>{
         if(result.length === 0){
-            return res.send({status:false, message:"Invalid Subject Selected"})
+            return res.send({status:false, message:"Subject does not exist"})
         }
         res.send({status:true,result})
     }).catch(err=>{
