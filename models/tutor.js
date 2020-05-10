@@ -38,8 +38,18 @@ const tutorSchema = new schema({
         type: Boolean,
         default: false
     },
-    subjects:[],
-    lessons: [],
+    subjects:[
+        {
+            type:mongoose.Schema.Types.ObjectId,
+            ref:"Subjects"
+        }
+    ],
+    lessons: [
+        {
+            type:mongoose.Schema.Types.ObjectId,
+            ref:"Lessons"
+        }
+    ],
     category: [],
     active:{
         type:Boolean,

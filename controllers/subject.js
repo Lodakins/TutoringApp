@@ -2,6 +2,7 @@ const Categories = require("../models/category");
 const Subject = require("../models/subject");
 const { signToken, verifyToken} = require("../middleware/authJWT")
 const { authenticateRole, authenticateUser } = require("../middleware/authUser");
+const Tutor = require("../models/tutor");
 
 
 exports.createSubjectByCategory=(req,res,next)=>{
@@ -14,17 +15,12 @@ exports.createSubjectByCategory=(req,res,next)=>{
         return res.send({status:false, message:"One or more fields missing"});
     }
 
-    console.log(category);
-    console.log(subjectName);
-    console.log(subjectDescription);
-
     Categories.findOne({categoryName:category}).exec().then(cat=>{
         console.log("here ooo");
         if(cat){
             let categoryName = cat.categoryName;
             let catId = cat._id;
-            console.log(catId);
-            let subject = new Subject({subjectName,subjectDescription,category:categoryName});
+            let subject = new Subject({subjectName,subjectDescription,category:catId});
                 subject.save().then(sub=>{
                     //5eb45c36bfa43640f4ca0074;
                     console.log("Save subject successfully");
@@ -126,4 +122,50 @@ exports.searchSubject=(req,res,next)=>{
     })
 
     }
+}
+
+exports.updatedSubject=(req,res,next)=>{
+    let subjectId = req.params.subjectId;
+    let name = req.body.subjectName;
+    let categoryId= req.body.categoryId;
+    let obj={};
+    if(!subjectId){
+        return res.send({status:false,message:"subjectId is missing"});
+    }
+
+    if(name || categoryId){
+          name  ? obj.subjectName=name : "";
+          categoryId ? obj.category=categoryId :"";
+
+
+        Subject.findByIdAndUpdate(subjectId,obj,{new:true,useFindAndModify:false}).then(result=>{
+                     return res.send({status:true,message:"Subject Update Sucessfully"});
+         }).catch(err=>{
+            return res.send({status:false,message:"Invalid Subject ID"});
+       })
+    }else{
+        return res.send({status:false,message:"Both parameters cannot be empty"})
+    }
+
+   
+}
+
+exports.deleteSubject=(req,res,next)=>{
+    let userId = req.body.userId;
+    let subjectId = req.params.subjectId;
+    if(!subjectId){
+        return res.send({status:false,message:"subjectId is missing"});
+    }
+    Tutor.findByIdAndUpdate({_id:userId},{
+        $pull:{
+            subjects:subjectId
+        }
+    },{ new: true, useFindAndModify: false }).then(result=>{
+        if(result){
+            return res.send({status:true,message:"Registerd deleted successfully"});
+        }
+    }).catch(err=>{
+        return res.send({status:true,message:err});
+    })
+
 }

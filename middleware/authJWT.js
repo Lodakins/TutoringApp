@@ -12,11 +12,12 @@ exports.verifyToken = (req,res,next) => {
       return res.status(403).send({ status:false,message: "Requires authorization access" });
     }
     
-   return  jwt.verify(token, process.env.TOKEN, (err, decoded) => {
+   jwt.verify(token, process.env.TOKEN, (err, decoded) => {
       if(err) {
         return res.status(401).send({ status:false, message:"You are not authorised!" });
       }else{
-        return true;
+        req.token = decoded;
+        next();
       }
      
     });

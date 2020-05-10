@@ -22,14 +22,28 @@ exports.authenticateUser =  (req,res,userId)=>{
     // })
 
 }
-exports.authenticateAdmin=  (req,res,userId)=>{
-    let tutor =  Tutor.findOne({_id:userId});
-        if(tutor){
-            return tutor.isAdmin;
-        }else{
-            return false;
-        }
-       
+exports.authenticateTutor=  (req,res,next)=>{
+    let userId = req.body.userId;
+    if(!userId){
+        return res.send({status:false,message:"userId parmater needed"})
+    }else{
+        Tutor.findOne({_id:userId}).then(result=>{
+            if(result === null){
+                return res.json({status:false,message:"No access right"});
+            }else{
+               next();
+            }
+        }).catch(err=>{
+            console.log("Error: "+ err);
+        })  
+    }
+         
+}
+
+exports.authenticateCategory=(req,res,next)=>{
+       let categoryId= req.body.categoryId;
+
+
 
 }
 

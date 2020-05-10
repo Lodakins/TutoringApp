@@ -107,49 +107,98 @@ exports.registerSubject=(req,res,next)=>{
     if(!userId || !categoryId || !subjectId){
         return res.send({status:false,message:"One or more parameter missing"});
     }
+            Categories.findOne({_id:categoryId}).select("-_id subjects").populate({path:"subjects"}).exec().then(result=>{
+                console.log("Category Result: "+result);
+                     let response = result.subjects;
 
-    if(verifyToken(req,res)){
-            if(!authenticateAdmin(req,res,userId)){
-                
-                Categories.findOne({_id: categoryId}).select("-_id subjects").populate({path:"subjects"}).exec().then(result=>{
-                    if(result.length === 0){
-                        return res.send({status:false, message:"Invalid Category Selected"})
-                    }
-                    let response = result.subjects;
-                        let subject=null;
-                    for(let item of response){
-                        let id = item._id.toString();
-                        if(id == subjectId){
-                            subject = item;
-                           
-                        }
-                    }
+                     let subject = response.some((item)=>{
+                         return item._id.toString() === subjectId;
+                     })
 
-                    if(subject !== null){
-                        Tutor.findByIdAndUpdate(userId,{
-                            $push: {
-                              subjects: subject
-                            }
-                          },
-                          { new: true, useFindAndModify: false }).then(result=>{
+                     if(subject){
+                         Subject.findOne({_id:subjectId}).select("tutors").populate({path:"tutors"}).exec().then(result=>{
+                            
+                             let response = result.tutors;
+                             let status = response.some((item)=> item._id.toString() === userId);
+                             if(status){
+                                return res.send({status:false,message:"Already registerd for the subject"});
+                             }else{
                                 Subject.findByIdAndUpdate(subjectId,{
-                                    $push: {
-                                        tutors: subject
+                                      $push: {
+                                              tutors: userId
+                                           }
+                                  }, { new: true, useFindAndModify: false }).then(result=>{
+
+                                    Tutor.findByIdAndUpdate(userId,{
+                                        $push: {
+                                         subjects: subjectId
                                       }
-                                })
-                                return res.send({status:true,message:"registerd successfully"});
-                          });
-                    }else{
-                    return  res.send({status:false,message:" Subject could not be found"});
-                    }
-        
-            }).catch(err=>{
-                console.log(err);
-                return res.send({status:false,message:"Invalid Category Parameter"});
-            })
+                                     },
+                                    { new: true, useFindAndModify: false }).then(result=>{
+                                         res.send({status:true,message:"You have successfully register"});
+                                     }).catch(err=>{
+                                         console.log("Tutor Error: "+err);
+                                         return res.send({status:false,message:err});
+                                    })
+            
+                                  }).catch(err=>{
+                                         return res.send({status:false,message:err});
+                                  })
+                                        
+                             }
 
-        }  
+                         }).catch(err=>{
+                             console.log("Error: "+err);
+                         })
+                        //  console.log("here in subject");
+                        //   Subject.findByIdAndUpdate(subjectId,{
+                        //      $push: {
+                        //          tutors: userId
+                        //        }
+                        //  }, { new: true, useFindAndModify: false }).then(result=>{
 
-   }
+                        //      console.log("Subject: "+result);
+                        //     console.log("userId: ")
+                        //  }).catch(err=>{
+                        //      return res.send({status:false,message:err});
+                        //  })
+                        //     Tutor.findByIdAndUpdate(userId,{
+                        //         $push: {
+                        //           subjects: subjectId
+                        //        }
+                        //       },
+                        //      { new: true, useFindAndModify: false }).then(resul=>{
+                        //          res.send({status:true,message:"You have successfully register"});
+                        //      }).catch(err=>{
+                        //          console.log("Tutor Error: "+err);
+                        //      })
+
+
+                        // }).catch(err=>{
+                        //     console.log("Subject Error: "+err);
+                        // })
+                     }else{
+                         returnres.send({status:false,message:"Subject Not found"});
+                     }
+
+                    //  ;
+                     
+    }).catch(err=>{
+        console.log("Error: "+err);
+        return res.send({status:false,message:"Invalid Category Id"})
+    })
 
 };
+
+exports.viewAllSubjects=(req,res,next)=>{
+    let userId = req.body.userId;
+
+    Tutor.findOne({_id:userId}).select("-_id subjects").populate("subjects").exec().then(result=>{
+        if(result){
+            return res.send({status:true,result});
+         }
+
+    }).catch(err=>{
+        return res.send({status:false,message:err});
+    })
+}

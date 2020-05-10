@@ -16,15 +16,15 @@ const Subject = new Schema({
             trim:true
         },
         category:{
-            type:String,
-            required:true,
-            trim:true
+            type:mongoose.Schema.Types.ObjectId,
+            ref:"Category",
+            required:true 
         }
         ,
         tutors:[
             {
               type:mongoose.Schema.Types.ObjectId,
-              ref:"Tutor" 
+              ref:"Tutors" 
             }
         ]
 });
