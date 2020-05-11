@@ -27,11 +27,9 @@ exports.createCategories=(req,res,next)=>{
 
 
 exports.showAllCategories=(req,res,next)=>{
-        if(verifyToken(req,res)){
-             Categories.find({categoryName: /^[a-zA-Z]+$/}).exec().then(cat=>{
-                 if(cat){
-                     return res.send({status:true, categories:cat})
+             Categories.find({categoryName: /^[a-zA-Z]+$/}).exec().then(categories=>{
+                 if(categories){
+                     return res.send({status:true, categories});
                  }
              }).catch(err=>{ return res.send({status:false, message: "Something went wrong"}) });
-        }
 }

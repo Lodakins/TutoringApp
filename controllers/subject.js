@@ -56,7 +56,6 @@ exports.createSubjectByCategory=(req,res,next)=>{
 exports.showSubjectByCategory=(req,res,next)=>{
     let category = req.params.category.toLowerCase();
 
-    if(verifyToken(req,res)){
         if(!category){
             return res.send({status:false, message:"Category parameter missing"});
         }
@@ -64,19 +63,18 @@ exports.showSubjectByCategory=(req,res,next)=>{
                 if(result.length === 0){
                     return res.send({status:false, message:"Invalid Category Selected"})
                 }
-                   return  res.send({status:true,result});
+                   return  res.send({status:true,subjects:result[0].subjects});
 
         }).catch(err=>{
             console.log(err);
             return res.send({status:false,message:"Invalid Category Parameter"});
         });
-    }
 }
 
 exports.getSubjectById=(req,res,next)=>{
-        let category = req.params.category;
+        let category = req.params.categoryId;
         let subjectid = req.params.subjectId;
-    if(verifyToken(req,res)){
+
         if(!category || !subjectid){
             return res.send({status:true,message:"One or more missing ids"})
         }
@@ -86,7 +84,6 @@ exports.getSubjectById=(req,res,next)=>{
                 return res.send({status:false, message:"Invalid Category Selected"})
             }
             let response = result.subjects;
-                console.log(response);
             for(let item of response){
                 let id = item._id.toString();
                 if(id == subjectid){
@@ -100,14 +97,12 @@ exports.getSubjectById=(req,res,next)=>{
         return res.send({status:false,message:"Invalid Category Parameter"});
     });
 
-  }
 
 }
 
 exports.searchSubject=(req,res,next)=>{
     let name =req.query.name;
 
-    if(verifyToken(req,res)){
     if(!name){
         return res.send({status:false,message:"Missing query paramters"});
     }
@@ -116,12 +111,11 @@ exports.searchSubject=(req,res,next)=>{
         if(result.length === 0){
             return res.send({status:false, message:"Subject does not exist"})
         }
-        res.send({status:true,result})
+        res.send({status:true,subjects:result})
     }).catch(err=>{
        return  res.send({status:false,message:"Something went wrong"});
     })
 
-    }
 }
 
 exports.updatedSubject=(req,res,next)=>{
@@ -162,7 +156,7 @@ exports.deleteSubject=(req,res,next)=>{
         }
     },{ new: true, useFindAndModify: false }).then(result=>{
         if(result){
-            return res.send({status:true,message:"Registerd deleted successfully"});
+            return res.send({status:true,message:"Registered Subjectd Deleted successfully"});
         }
     }).catch(err=>{
         return res.send({status:true,message:err});

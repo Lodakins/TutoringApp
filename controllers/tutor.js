@@ -65,6 +65,8 @@ exports.loginTutor=(req,res,next)=>{
                 }
             })
         }
+    }).catch(err=>{
+        return res.send({status:false,message:err});
     })
 }
 
@@ -73,31 +75,21 @@ exports.searchTutors=(req,res,next)=>{
     let name = req.query.firstName.toLowerCase();
     let userId = req.body.userId;
 
-        if(!userId){
-            return res.send({status:false,message:"userId parameter missing"});
-        }
-    if(verifyToken(req,res)){
-       if(authenticateUser(req,res,userId) || authenticateAdmin(req,res,userId)){
+      
             if(!name){
                  return res.send({status:false,message:"query parameter firstName missing"});
-                 }
+            }
              Tutor.find({firstName:name}).sort({lastName:"asc"}).exec().then(result=>{
-                    if(result.length ===0){
+                    if(result.length === 0){
                          return res.send({status:false,message:"Tutors not found"});
                      }
-                     res.send({status:true,result});
+                     res.send({status:true,tutors:result});
     
                 }).catch(err=>{
-                  console.log(err)
                      return res.send({status:false,message:"Something went wrong"});
              })
-         }else{
-                 return res.send({status:false,message:"No access right"});
-        }
-    
-  }
+    }
 
-}
 
 exports.registerSubject=(req,res,next)=>{
     let categoryId = req.params.categoryId;
@@ -108,9 +100,7 @@ exports.registerSubject=(req,res,next)=>{
         return res.send({status:false,message:"One or more parameter missing"});
     }
             Categories.findOne({_id:categoryId}).select("-_id subjects").populate({path:"subjects"}).exec().then(result=>{
-                console.log("Category Result: "+result);
                      let response = result.subjects;
-
                      let subject = response.some((item)=>{
                          return item._id.toString() === subjectId;
                      })
@@ -150,35 +140,9 @@ exports.registerSubject=(req,res,next)=>{
                          }).catch(err=>{
                              console.log("Error: "+err);
                          })
-                        //  console.log("here in subject");
-                        //   Subject.findByIdAndUpdate(subjectId,{
-                        //      $push: {
-                        //          tutors: userId
-                        //        }
-                        //  }, { new: true, useFindAndModify: false }).then(result=>{
-
-                        //      console.log("Subject: "+result);
-                        //     console.log("userId: ")
-                        //  }).catch(err=>{
-                        //      return res.send({status:false,message:err});
-                        //  })
-                        //     Tutor.findByIdAndUpdate(userId,{
-                        //         $push: {
-                        //           subjects: subjectId
-                        //        }
-                        //       },
-                        //      { new: true, useFindAndModify: false }).then(resul=>{
-                        //          res.send({status:true,message:"You have successfully register"});
-                        //      }).catch(err=>{
-                        //          console.log("Tutor Error: "+err);
-                        //      })
-
-
-                        // }).catch(err=>{
-                        //     console.log("Subject Error: "+err);
-                        // })
+                    
                      }else{
-                         returnres.send({status:false,message:"Subject Not found"});
+                         return res.send({status:false,message:"Subject Not found"});
                      }
 
                     //  ;
@@ -195,7 +159,7 @@ exports.viewAllSubjects=(req,res,next)=>{
 
     Tutor.findOne({_id:userId}).select("-_id subjects").populate("subjects").exec().then(result=>{
         if(result){
-            return res.send({status:true,result});
+            return res.send({status:true,subjects:result.subjects});
          }
 
     }).catch(err=>{

@@ -5,23 +5,30 @@ const Tutor = require('../models/tutor');
 const ROLES=['student','tutor'];
 
 
-exports.authenticateUser =  (req,res,userId)=>{
-    let user = User.findOne({_id:userId});
-        if(user){
-            return user;
-        }else{
-            return false;
-        }
-           // if(user){
-    //             return true;
-    //         }else{
-    //            
-    //         }
-    // }).catch(err=>{
-    //     return res.send({status:false,message:"Something went wrong with validating user"});
-    // })
+exports.authenticateUserAdmin =  (req,res,next)=>{
+    let userId = req.body.userId;
+    if(!userId){
+        return res.send({status:false,message:"userId parameter missing"});
+    }
 
+    User.findOne({_id:userId}).then(result=>{
+        if(result=== null){
+            Tutor.findOne({_id:userId}).then(result=>{
+                if(result == null){
+                    return res.send({status:false,message:"No access right"});
+                }else if(result.isAdmin==false){
+                    return res.send({status:false,message:"No access right"});
+                }else{
+                    next();
+                }
+            })
+        }else{
+            next();
+        }
+    })
 }
+
+
 exports.authenticateTutor=  (req,res,next)=>{
     let userId = req.body.userId;
     if(!userId){
@@ -30,7 +37,10 @@ exports.authenticateTutor=  (req,res,next)=>{
         Tutor.findOne({_id:userId}).then(result=>{
             if(result === null){
                 return res.json({status:false,message:"No access right"});
-            }else{
+            }else if( result.isAdmin === true){
+                return res.json({status:false,message:"No access right"});
+            }
+            else{
                next();
             }
         }).catch(err=>{
