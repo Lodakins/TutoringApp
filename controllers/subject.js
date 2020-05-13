@@ -16,7 +16,6 @@ exports.createSubjectByCategory=(req,res,next)=>{
     }
 
     Categories.findOne({categoryName:category}).exec().then(cat=>{
-        console.log("here ooo");
         if(cat){
             let categoryName = cat.categoryName;
             let catId = cat._id;
@@ -122,6 +121,7 @@ exports.updatedSubject=(req,res,next)=>{
     let subjectId = req.params.subjectId;
     let name = req.body.subjectName;
     let categoryId= req.body.categoryId;
+    let userId= req.body.userId;
     let obj={};
     if(!subjectId){
         return res.send({status:false,message:"subjectId is missing"});
@@ -131,12 +131,33 @@ exports.updatedSubject=(req,res,next)=>{
           name  ? obj.subjectName=name : "";
           categoryId ? obj.category=categoryId :"";
 
+          Categories.findOne({_id:categoryId}).select("-_id subjects").exec().then(result=>{
 
-        Subject.findByIdAndUpdate(subjectId,obj,{new:true,useFindAndModify:false}).then(result=>{
-                     return res.send({status:true,message:"Subject Update Sucessfully"});
-         }).catch(err=>{
-            return res.send({status:false,message:"Invalid Subject ID"});
-       })
+            Subject.findOne({_id:subjectId}).select("tutors").populate({path:"tutors"}).exec().then(result=>{
+                            
+                let response = result.tutors;
+                let status = response.some((item)=> item._id.toString() === userId);
+                if(status){
+                    Subject.findByIdAndUpdate(subjectId,{$set:obj}
+                        ,{new:true,useFindAndModify:false}).then(result=>{
+                        return res.send({status:true,message:"Subject Update Sucessfully"});
+                        }).catch(err=>{
+                        return res.send({status:false,message:"Invalid Subject ID"});
+                    })
+                   
+                }else{
+                    return res.send({status:false,message:" You did not register for the subject"});
+                }
+    
+            }).catch(err=>{
+                return res.send({status:false,message:err});
+            })
+
+
+          }).catch(err=>{
+              return res.send({status:false,message:"Invalid Category Id"});
+          }) 
+       
     }else{
         return res.send({status:false,message:"Both parameters cannot be empty"})
     }
@@ -161,5 +182,139 @@ exports.deleteSubject=(req,res,next)=>{
     }).catch(err=>{
         return res.send({status:true,message:err});
     })
+
+}
+
+
+exports.deletedSuj=(req,res,next)=>{
+
+    let subjectId = req.params.subjectId;
+    let categoryId= req.body.categoryId;
+
+    if(!categoryId || !subjectId){
+        return res.send({status:false,message:"One or more empty paramters"});
+    }
+
+    Categories.findOne({_id:categoryId}).select("-_id subjects").exec().then(result=>{
+        let response = result.subjects;
+        
+        let status = response.some((item)=>{
+            return item._id.toString() === subjectId;
+        })
+
+        
+        if(status){
+            let subject=[];
+            response.forEach(element => {
+                if(element.toString() !== subjectId){
+                    subject.push(element);
+                }
+            });
+            
+            Categories.findByIdAndUpdate(categoryId,{
+                $set: {
+                        subjects: subject
+                     }
+            }, { new: true, useFindAndModify: false }).then(result=>{
+                Subject.findOne({_id:subjectId}).select("tutors").then(result=>{
+                        let response = result.tutors;
+                      
+                        if(response.length === 0){
+                            Subject.deleteOne({_id:subjectId}).exec().then(result=>{
+                                    if(result){
+                                        return res.send({status:true,message:"Subject Deleted successfully"});
+                                    }
+                            }).catch(err=>{
+                                return res.send({status:false,message:err});
+                            })
+                        }else{
+                        response.forEach(async item=>{
+                            await Tutor.findByIdAndUpdate(item.toString(),{
+                                $pull:{ subjects: subjectId}
+                            },{ new: true, useFindAndModify: false });
+                        });
+
+                        Subject.deleteOne({_id:subjectId}).then(result=>{
+                            if(result){
+                                return res.send({status:true,message:"Subject Deleted successfully"});
+                            }
+                          }).catch(err=>{
+                            return res.send({status:false,message:err});
+                         }); 
+                    }
+
+                }).catch(err=>{
+                    return res.send({status:false,message:err});
+                })
+
+
+            }).catch(err=>{
+                return res.send({status:false,message:err});
+            })
+
+        }else{
+            return res.send({status:false,message:"Subject is not registered in this category"});
+        }
+        
+}).catch(err=>{
+console.log("Error: "+err);
+return res.send({status:false,message:"Invalid Category Id"})
+})
+
+
+}
+
+exports.updateSubject=(req,res,next)=>{
+    let subjectId = req.params.subjectId;
+    let name = req.body.subjectName;
+    let categoryId= req.body.categoryId;
+    let userId= req.body.userId;
+    let obj={};
+    if(!subjectId){
+        return res.send({status:false,message:"subjectId is missing"});
+    }
+
+    if(name || categoryId){
+          name  ? obj.subjectName=name : "";
+          categoryId ? obj.category=categoryId :"";
+
+          Categories.findOne({_id:categoryId}).select("-_id subjects").exec().then(result=>{
+            let response = result.subjects;
+        
+            let status = response.some((item)=>{
+                return item._id.toString() === subjectId;
+            })
+    
+            
+            if(status){
+
+
+            Subject.findOne({_id:subjectId}).select("tutors").populate({path:"tutors"}).exec().then(result=>{
+                            
+                    Subject.findByIdAndUpdate(subjectId,{$set:obj},{new:true,useFindAndModify:false}).then(result=>{
+                        return res.send({status:true,message:"Subject Update Sucessfully"});
+                        }).catch(err=>{
+                        return res.send({status:false,message:"Invalid Subject ID"});
+                    })
+           
+    
+            }).catch(err=>{
+                return res.send({status:false,message:"Invalid Subject Selected"});
+            })
+                    
+        }else{
+           return res.send({status:false,message:"Subject is not in this category"});     
+        }
+
+          }).catch(err=>{
+              return res.send({status:false,message:"Invalid Category Id"});
+          })
+          
+       
+    }else{
+        return res.send({status:false,message:"Both parameters cannot be empty"})
+    }
+
+   
 
 }

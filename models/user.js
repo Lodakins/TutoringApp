@@ -34,7 +34,12 @@ const userSchema = new schema({
     phoneNumber:{
         type:String
     },
-    lessons: [],
+    lessons: [
+        {
+            type:mongoose.Schema.Types.ObjectId,
+            ref:"Lesson"
+        }
+    ],
     active:{
         type:Boolean,
         required:true,

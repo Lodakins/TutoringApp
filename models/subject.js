@@ -78,7 +78,8 @@ Handwriting
 
 /*
 
-
+admin password: pa!@#$%d123
+admin email: superadmin@tech.com
 
 
 

@@ -9,20 +9,31 @@ const Lessons = new Schema({
             trim:true,
             required:true
         },
-        lessonDescription: {
-            type:String,
+        lessonDate:{
+            type:Date,
+            default: Date.now,
+            required:true
+        },
+        lessonTime:{
+            type: String,
             required:true
         },
         subject:{
             type:mongoose.Schema.Types.ObjectId,
-            ref:"Subject"
+            ref:"Subjects"
         },
-        tutors:[
+        tutor:
             {
               type:mongoose.Schema.Types.ObjectId,
-              ref:"User" 
+              ref:"Tutors" 
             }
-        ]
+        ,
+        student:
+            {
+                type:mongoose.Schema.Types.ObjectId,
+                ref:"User"
+            }
+        
 });
 
 module.exports = mongoose.model("Lesson",Lessons);

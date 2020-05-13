@@ -54,6 +54,8 @@ exports.loginTutor=(req,res,next)=>{
     Tutor.findOne({email: email.toLowerCase()}).then(user=>{
         if(!user){
             return res.send({status:false,message:"User does not exist"});
+        }else if(user.active === false){
+            return res.send({status:true,message:"Your access have been revoked"});
         }else{
             bcrypt.compare(password,user.password).then(result=>{
                
@@ -166,3 +168,96 @@ exports.viewAllSubjects=(req,res,next)=>{
         return res.send({status:false,message:err});
     })
 }
+
+exports.viewAllTutors=(req,res,next)=>{
+    let subjectId = req.params.subjectId;
+    let categoryId= req.params.categoryId;
+    console.log("subjectId: "+subjectId);
+    console.log("categoryId: "+categoryId);
+
+    if(!subjectId || !categoryId){
+        return res.send({status:false,message:"One of parameter missing"});
+    }else{
+        Categories.findOne({_id:categoryId}).select("subjects").exec().then(result=>{
+                let response = result.subjects;
+                console.log("Subjects: "+response);
+                if(response.length === 0){
+                    return res.send({status:false,message:"Category does not have subjects"});
+                }else{
+                    let status = response.some(item=>{
+                        return item.toString()== subjectId;
+                    });
+                        console.log("Status: "+status);
+                    if(status){
+                            Subject.findOne({_id:subjectId}).select("tutors").populate("tutors").select("-_id").exec().then(result=>{
+                                    let response= result.tutors;
+                                    if(response.length === 0){
+                                        return res.send({status:false,message:"Subject does not have tutors"});
+                                    }else{
+                                        return res.send({status:true,tutors: response});
+                                    }
+                            }).catch(err=>{
+                                return res.send({status:false,message:err});
+                            })
+                    }else{
+                        return res.send({status:false,message:"Subject not registerd in category"});
+                    }
+                }
+
+        }).catch(err=>{
+            return res.send({status:false,message:"Invalid Category Id"});
+        })
+    }
+
+
+
+}
+
+exports.showAllTutors=(req,res,next)=>{
+
+    Tutor.find({}).then(tutors=>{
+            if(tutors){
+                return res.send({status:true,tutors});
+            }
+
+    }).catch(err=>{
+        return res.send({status:false,message:err});
+    })
+}
+
+exports.searchTutorById=(req,res,next)=>{
+    let tutorId = req.params.tutorId;
+    if(!tutorId){
+        return res.send({status:false,message:"tutorId needed"});
+    }else{
+        Tutor.findOne({_id:tutorId}).then(tutor=>{
+            if(tutor === null){
+                return res.send({status:false,message:"Tutor does not exist"});
+            }else{
+                return res.send({status:true,tutor});
+            }
+        })
+    }
+}
+
+exports.deactivateTutor=(req,res,next)=>{
+    let tutorId= req.params.tutorId;
+
+    if(!tutorId){
+        return res.send({status:false,message:"Tutor id missing"});
+    }else{
+        Tutor.findByIdAndUpdate(tutorId,{
+            $set:{
+                active:false
+            }
+        },{new:true,useFindAndModify:false}).then(result=>{
+            return res.send({status:true,message:"Tutor deactivated successfully"});
+        }).catch(err=>{
+            return res.send({status:false,message:"Invalid Tutor Id"});
+        })
+
+    }
+
+
+
+};

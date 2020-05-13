@@ -29,6 +29,23 @@ exports.authenticateUserAdmin =  (req,res,next)=>{
 }
 
 
+exports.authenticateUser=(req,res,next)=>{
+    let userId= req.body.userId;
+    if(!userId){
+        return res.send({status:false,message:"userId paramter missing"});
+    }else{
+        User.findOne({_id:userId}).then(result=>{
+            if(result == null){
+                return res.send({status:false,message:"no access right"});
+            }
+            next();
+        }).catch(err=>{
+            return res.send({status:false,message:"Invalid userId"});
+        })
+    }
+
+}
+
 exports.authenticateTutor=  (req,res,next)=>{
     let userId = req.body.userId;
     if(!userId){
@@ -37,7 +54,7 @@ exports.authenticateTutor=  (req,res,next)=>{
         Tutor.findOne({_id:userId}).then(result=>{
             if(result === null){
                 return res.json({status:false,message:"No access right"});
-            }else if( result.isAdmin === true){
+            }else if( result.isAdmin === true || result.active == false){
                 return res.json({status:false,message:"No access right"});
             }
             else{
@@ -50,33 +67,22 @@ exports.authenticateTutor=  (req,res,next)=>{
          
 }
 
-exports.authenticateCategory=(req,res,next)=>{
-       let categoryId= req.body.categoryId;
-
-
-
-}
-
-
-exports.authenticateRole=(res,req,userId,access)=>{
-    User.findOne({_id:userId}).then(user=>{
-        if(user){
-            if(user.role === access){
-                return true;   
-            }else{
-                return res.send({status:false,message:"No access right"});
-            }
-        }
-    }).catch(err=>{
-        res.send({status:false,message:"Something went wrong, user authentication failed"});
-    })
-}
-
-exports.validateRoles=(role)=>{
-    for(let user of ROLES){
-        if(user== role){
-            return true;
-        }
-    }
-    return false;
+exports.authenticateAdmin=(req,res,next)=>{
+    let userId = req.body.userId;
+    if(!userId){
+        return res.send({status:false,message:"userId parmater needed"})
+    }else{
+            Tutor.findOne({_id:userId}).then(result=>{
+                if(result === null){
+                    return res.json({status:false,message:"No access right"});
+                }else if( result.isAdmin === false){
+                    return res.json({status:false,message:"No access right"});
+                }
+                else{
+                   next();
+                }
+            }).catch(err=>{
+                return res.send({status:false,message:err});
+            })
+     } 
 }
