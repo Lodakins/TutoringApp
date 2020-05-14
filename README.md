@@ -19,6 +19,7 @@ Apart from the register and login endpoints, all others require an authenticatio
 ### Request and Resoponse Sample
 Error  Response Sample | Success Response Sample
 ------------ | -------------
+Content in the first column | Content in the second column
 ```
 {
     status:false,
@@ -37,8 +38,6 @@ Error  Response Sample | Success Response Sample
     ]
 }
 ```
-Content in the first column | Content in the second column
-Error  Response Sample
 
 
 ### Student Signup
