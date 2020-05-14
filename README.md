@@ -29,7 +29,7 @@ Apart from the register and login endpoints, all others require an authenticatio
 
 
 ### Student Signup
-POST /signup
+__POST /signup__
 Requst paramter can be JSON or url encoded paramter
 ```
 {
@@ -48,3 +48,6 @@ Response Code
     message:"Registration successfull"
 }
 ```
+### Tutor Signup
+__POST /tutor/signup__
+
