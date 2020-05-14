@@ -99,10 +99,21 @@ Name | type
 email | String
 password | String
 
+
+Request Sample
 ```
 {
  "email":"ploar@gmail.com
    "password":"polar"
+}
+```
+Success Reponse:
+```
+{
+    "status": true,
+    "userId": "5ebd5325678f8b39cc53e12d",
+    "email": "tut@gmail.com",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InR1dG9yMUBnbWFpbC5jb20iLCJpZCI6IjVlYmQ1MzIxNzM4ZjhiMzljYzUzZTEyZCIsImlhdCI6MTU4OTQ2NjA2OSwiZXhwIjoxNTg5NjM4ODY5fQ.LaPQHfIv6Tl58MaiN7y-kdkkdkdkdkdkdk"
 }
 ```
 
@@ -118,9 +129,32 @@ Name | type
 email | String
 password | String
 
+Request
 ```
 {
  "email":"ploar@gmail.com
    "password":"polar"
 }
 ```
+Success Reponse:
+```
+{
+    "status": true,
+    "userId": "5ebd5325678f8b39cc53e12d",
+    "email": "tut@gmail.com",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InR1dG9yMUBnbWFpbC5jb20iLCJpZCI6IjVlYmQ1MzIxNzM4ZjhiMzljYzUzZTEyZCIsImlhdCI6MTU4OTQ2NjA2OSwiZXhwIjoxNTg5NjM4ODY5fQ.LaPQHfIv6Tl58MaiN7y-kdkkdkdkdkdkdk"
+}
+```
+
+### GENERAL FUNCTIONALITES
+
+## RETRIEVE A SUJECT IN A CATEGORY BY ID
+__POST /category/:categoryId/subject/:subjectId__
+
+A token is needed the header
+
+```
+x-access-token: 23456787654sdfghjhgfdse456fdsdfgre;
+```
+
+
