@@ -7,6 +7,9 @@ The root end point for the api is
 ### Authentication
 Apart from the register and login endpoints, all others require an authentication token with you will get after a successfull login
 ### Request and Resoponse Sample
+
+Request paramter can be JSON or url encoded paramter
+
 ## Error  Response Sample
 ```
 {
@@ -30,7 +33,18 @@ Apart from the register and login endpoints, all others require an authenticatio
 
 ### Student Signup
 __POST /signup__
-Requst paramter can be JSON or url encoded paramter
+
+
+Parameters
+
+Name | type
+------------ | -------------
+firtName | String
+lastName | String
+email | String
+password | String
+gender | String
+phoneNumber | String
 ```
 {
     "firstName":"polaris"
@@ -50,4 +64,29 @@ Response Code
 ```
 ### Tutor Signup
 __POST /tutor/signup__
+
+Parameters
+
+Name | type
+------------ | -------------
+firtName | String
+lastName | String
+email | String
+password | String
+gender | String
+phoneNumber | String
+
+
+```
+{
+    "firstName":"polaris"
+    "lastName":"oool"
+    "email":"ploar@gmail.com
+   "password":"polar"
+    "gender":"male
+    "phoneNumber":"09023456789
+}
+```
+
+
 
