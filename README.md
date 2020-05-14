@@ -24,7 +24,9 @@ Error  Response Sample | Success Response Sample
     status:false,
     message:"This is a message"
 }
-``` | ```
+``` 
+|
+ ```
 {
     status:true,
     tutor:[
