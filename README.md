@@ -87,6 +87,40 @@ phoneNumber | String
     "phoneNumber":"09023456789
 }
 ```
+### Student Login
+__POST /login__
 
+A token,userId is generated after a successfull login which will needed to access other endpoint, so therefore make sure you keep it safe. 
 
+Parameters
 
+Name | type
+------------ | -------------
+email | String
+password | String
+
+```
+{
+ "email":"ploar@gmail.com
+   "password":"polar"
+}
+```
+
+### Tutor Login
+__POST /tutor/login__
+
+A token,userId is generated after a successfull login which will needed to access other endpoint, so therefore make sure you keep it safe. 
+
+Parameters
+
+Name | type
+------------ | -------------
+email | String
+password | String
+
+```
+{
+ "email":"ploar@gmail.com
+   "password":"polar"
+}
+```
