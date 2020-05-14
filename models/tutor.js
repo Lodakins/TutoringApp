@@ -36,7 +36,7 @@ const tutorSchema = new schema({
     },
     isAdmin:{
         type: Boolean,
-        default: false
+        default: true
     },
     subjects:[
         {

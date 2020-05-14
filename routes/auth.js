@@ -26,9 +26,9 @@ router.post("/lesson/book",bookLesson);
 router.post("/category/create",createCategories);
 router.delete("/category/:categoryId",[verifyToken,authenticateAdmin,deleteCategory])
 router.get("/categories",[verifyToken,showAllCategories]);
-router.get("/category/:category/subjects",[verifyToken,showSubjectByCategory]);
+router.get("/category/:categoryId/subjects",[verifyToken,showSubjectByCategory]);
 router.post("/subject/create",[verifyToken,authenticateAdmin,createSubjectByCategory]);
-router.get("/category/:categoryId/subject/:subjectId",getSubjectById);
+router.get("/category/:categoryId/subject/:subjectId",[verifyToken,getSubjectById]);
 router.put("/category/:category",[verifyToken,authenticateAdmin,updateCategory]);
 router.get("/subject",[verifyToken,searchSubject]);
 router.put("/subject/:subjectId",[verifyToken,authenticateAdmin,updateSubject])

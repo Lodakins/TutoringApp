@@ -15,9 +15,9 @@ exports.authenticateUserAdmin =  (req,res,next)=>{
         if(result=== null){
             Tutor.findOne({_id:userId}).then(result=>{
                 if(result == null){
-                    return res.send({status:false,message:"No access right"});
+                    return res.send({status:false,message:"User has no access right"});
                 }else if(result.isAdmin==false){
-                    return res.send({status:false,message:"No access right"});
+                    return res.send({status:false,message:"User has no access right"});
                 }else{
                     next();
                 }
@@ -36,7 +36,7 @@ exports.authenticateUser=(req,res,next)=>{
     }else{
         User.findOne({_id:userId}).then(result=>{
             if(result == null){
-                return res.send({status:false,message:"no access right"});
+                return res.send({status:false,message:"User has no access right"});
             }
             next();
         }).catch(err=>{
@@ -53,9 +53,9 @@ exports.authenticateTutor=  (req,res,next)=>{
     }else{
         Tutor.findOne({_id:userId}).then(result=>{
             if(result === null){
-                return res.json({status:false,message:"No access right"});
+                return res.json({status:false,message:"User has no access right"});
             }else if( result.isAdmin === true || result.active == false){
-                return res.json({status:false,message:"No access right"});
+                return res.json({status:false,message:"User has no access right"});
             }
             else{
                next();
@@ -74,9 +74,9 @@ exports.authenticateAdmin=(req,res,next)=>{
     }else{
             Tutor.findOne({_id:userId}).then(result=>{
                 if(result === null){
-                    return res.json({status:false,message:"No access right"});
+                    return res.json({status:false,message:"User has no access right"});
                 }else if( result.isAdmin === false){
-                    return res.json({status:false,message:"No access right"});
+                    return res.json({status:false,message:"User has no access right"});
                 }
                 else{
                    next();

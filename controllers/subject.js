@@ -6,7 +6,7 @@ const Tutor = require("../models/tutor");
 
 
 exports.createSubjectByCategory=(req,res,next)=>{
-    let category = req.query.category;
+    let category = req.body.categoryId;
     let subjectName = req.body.subjectName;
     let subjectDescription = req.body.subjectDescription;
 
@@ -15,7 +15,7 @@ exports.createSubjectByCategory=(req,res,next)=>{
         return res.send({status:false, message:"One or more fields missing"});
     }
 
-    Categories.findOne({categoryName:category}).exec().then(cat=>{
+    Categories.findOne({_id:category}).exec().then(cat=>{
         if(cat){
             let categoryName = cat.categoryName;
             let catId = cat._id;
@@ -53,12 +53,12 @@ exports.createSubjectByCategory=(req,res,next)=>{
 
 
 exports.showSubjectByCategory=(req,res,next)=>{
-    let category = req.params.category.toLowerCase();
+    let category = req.params.categoryId.toLowerCase();
 
         if(!category){
             return res.send({status:false, message:"Category parameter missing"});
         }
-        Categories.find({categoryName: category}).populate({path:"subjects"}).select("-_id subjects").exec().then(result=>{
+        Categories.find({_id: category}).populate({path:"subjects"}).select("-_id subjects").exec().then(result=>{
                 if(result.length === 0){
                     return res.send({status:false, message:"Invalid Category Selected"})
                 }
@@ -78,7 +78,7 @@ exports.getSubjectById=(req,res,next)=>{
             return res.send({status:true,message:"One or more missing ids"})
         }
 
-        Categories.findOne({categoryName: category}).select("-_id subjects").populate({path:"subjects"}).populate({path:"category"}).exec().then(result=>{
+        Categories.findOne({_id: category}).select("-_id subjects").populate({path:"subjects"}).populate({path:"category"}).exec().then(result=>{
             if(result.length === 0){
                 return res.send({status:false, message:"Invalid Category Selected"})
             }
