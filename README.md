@@ -153,7 +153,7 @@ Success Reponse:
 ### GENERAL FUNCTIONALITES(student,tutor,admin)
 
 #### RETRIEVE ALL CATEGORIES
-__GET /__
+__GET /categories__
 
 The `/categories` endpoint returns the list of all categories. 
 
@@ -264,9 +264,9 @@ Success Response
 
 __POST /tutor?firstName={{tutorName}}__
 
-he ` /tutor?firstName={{tutorName}}` endpoint search for  tutor by name;
+The ` /tutor?firstName={{tutorName}}` endpoint search for  tutor by name
 
-Requires API Key as `x-access-token:""` in request header and a `userId paramter in the body`.
+Requires API Key as `x-access-token:""` in request header and a `userId parameter in the body`.
 
 Request Paramter
 ```
@@ -300,6 +300,167 @@ Success Response
     ]
 }
 ```
+
+## STUDENT FUNCTIONALITIES
+#### GET ALL TUTORS TAKINS A PARTICULAR SUBJECT IN A CATEGORIE
+
+__POST /tutors/:categoryId/:subjectId__
+
+The `/tutors/:categoryId/:subjectId` endpoint retrieve all tutors taking a subject belonging to a category
+
+Requires API Key as `x-access-token:""` in request header and a `userId parameter in the body`.
+
+Request Paramter
+```
+{
+    "userId":"uiopoihjk23443jklkjhjk"
+}
+```
+
+Success Response
+```
+{
+    "status": true,
+    "tutors": [
+        {
+            "_id": "5ebd5321738f8b39cc53e12d",
+            "firstName": "tutor",
+            "lastName": "tech",
+            "password": "$2b$12$MM7IAshgtdzGshYbV6eyre1pHVsBdqgHsDbGrq0iAi29BqtrTg80.",
+            "gender": "male",
+            "email": "tutor1@gmail.com",
+            "phoneNumber": "09087563423",
+            "createdAt": "2020-05-14T14:18:09.714Z",
+            "updatedAt": "2020-05-14T14:18:09.714Z",
+            "__v": 0
+        },
+        {
+            "_id": "5ebd5321738f8b39cc53e12d",
+            "firstName": "tutor",
+            "lastName": "tech",
+            "password": "$2b$12$MM7IAshgtdzGshYbV6eyre1pHVsBdqgHsDbGrq0iAi29BqtrTg80.",
+            "gender": "male",
+            "email": "tutor1@gmail.com",
+            "phoneNumber": "09087563423",
+            "createdAt": "2020-05-14T14:18:09.714Z",
+            "updatedAt": "2020-05-14T14:18:09.714Z",
+            "__v": 0
+        }
+    ]
+}
+```
+
+#### BOOK LESSON (STUDENT / ADMIN)
+
+__/POST /lesson__
+
+The `/lesson` endpoint  enable a student book lesson passing the parameters below.
+
+Requires API Key as `x-access-token:""` in request header and a `userId parameter in the body`.
+
+Sample Request Paramter
+```
+{
+    "userId":"uiopoihjk23443jklkjhjk"
+    "name":"vlesson";
+    "date":"2020-02-22";
+    "time":"11:00pm";
+    "subjectId":"svfgsfgf";
+    "tutorId":"eere4343gdsbfb";
+    "studentId":"dddttee333d4";
+}
+```
+Sample Success Response
+```
+{
+    "status": true,
+    "message": "You have successfully book for lessons"
+}
+``` 
+
+### TUTOR FUNCTIONALITIES
+
+#### REGISTER TO TAKE A SUBJECT
+
+__/POST /subject/register/:categoryId/:subjectId__
+
+The `/subject/register/:categoryId/:subjectId` endpoint  enable a tutor to register for a subject in a category.
+
+Requires API Key as `x-access-token:""` in request header and a `userId parameter in the body`.
+
+Sample Request Paramter
+```
+{
+    "userId":"uiopoihjk23443jklkjhjk"
+}
+```
+Sample Success Response
+```
+{
+    "status": true,
+    "message": "You have successfully register"
+}
+``` 
+
+#### TUTOR  SEE ALL REGISTERED SUBJECTS 
+
+
+__/POST  /tutor/subjects__
+
+The ` /tutor/subjects` endpoint  enable a tutor to register for a subject in a category.
+
+Requires API Key as `x-access-token:""` in request header and a `userId parameter in the body`.
+
+Sample Request Paramter
+```
+{
+    "userId":"uiopoihjk23443jklkjhjk"
+}
+```
+Sample Success Response
+```
+{
+    "status": true,
+    "subjects": [
+        {
+            "tutors": [
+                "5ebd5321738f8b39cc53e12d"
+            ],
+            "_id": "5ebd7f5aafc6580310254cc0",
+            "subjectName": "english language",
+            "subjectDescription": "this subject is about  english language",
+            "category": "5ebd605e54b32b46245c0294",
+            "__v": 0
+        }
+    ]
+}
+```
+
+#### TUTOR TO UPDATE A REGISTERED SUBJECT
+
+__/PUT  /tutor/subject/:subjectId__
+
+The ` /tutor/subject/:subjectId` endpoint  enable a tutor to update a registered subject.
+
+Requires API Key as `x-access-token:""` in request header and a `userId parameter in the body`.
+
+Sample Request Paramter
+```
+{
+    "userId":"uiopoihjk23443jklkjhjk"
+    "subjectDescription":"this is a sample"
+    "subjectName":"Mathmatics"
+}
+```
+Sample Success Response
+```
+{
+    "status": true,
+    "message": "Subject Update Sucessfully"
+}
+```
+
+
 
 
 

@@ -18,7 +18,7 @@ router.get("/tutor/:tutorId",[verifyToken,authenticateAdmin,searchTutorById])
 router.get("/tutor",[verifyToken,authenticateUserAdmin,searchTutors]);
 router.post("/tutors/:categoryId/:subjectId",[verifyToken,authenticateUser,viewAllTutors]);
 router.post("/tutor/subjects",[verifyToken,authenticateTutor,viewAllSubjects]);
-router.post("/tutor/subject/register/:categoryId/:subjectId",[verifyToken,authenticateTutor,registerSubject]);
+router.post("/subject/register/:categoryId/:subjectId",[verifyToken,authenticateTutor,registerSubject]);
 router.put("/tutor/subject/:subjectId",[verifyToken,authenticateTutor,updatedSubject]);
 router.delete("/tutor/subject/:subjectId",[verifyToken,authenticateTutor,deleteSubject]);
 router.get("/tutor/deactivate/:tutorId",[verifyToken,authenticateAdmin,deactivateTutor])

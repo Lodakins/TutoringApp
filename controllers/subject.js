@@ -120,6 +120,7 @@ exports.searchSubject=(req,res,next)=>{
 exports.updatedSubject=(req,res,next)=>{
     let subjectId = req.params.subjectId;
     let name = req.body.subjectName;
+    let description = req.body.subjectDescription;
     let categoryId= req.body.categoryId;
     let userId= req.body.userId;
     let obj={};
@@ -127,9 +128,10 @@ exports.updatedSubject=(req,res,next)=>{
         return res.send({status:false,message:"subjectId is missing"});
     }
 
-    if(name || categoryId){
+    if(name || categoryId || description){
           name  ? obj.subjectName=name : "";
           categoryId ? obj.category=categoryId :"";
+          description ? obj.subjectDescription=description :"";
 
           Categories.findOne({_id:categoryId}).select("-_id subjects").exec().then(result=>{
 
