@@ -30,13 +30,21 @@ Apart from the register and login endpoints, all others require an authenticatio
 
 ### Student Signup
 POST /signup
-Requst paramter can be JSON or url encoded
+Requst paramter can be JSON or url encoded paramter
+```
 {
-    firstName:
-    lastName:
-    email:
-    password:
-    gender:
-    phoneNumber:
+    "firstName":"polaris"
+    "lastName":"oool"
+    "email":"ploar@gmail.com
+   "password":"polar"
+    "gender":"male
+    "phoneNumber":"09023456789
 }
-Response:
+```
+Response Code
+```
+{
+    status:true,
+    message:"Registration successfull"
+}
+```
