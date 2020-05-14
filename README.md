@@ -302,7 +302,7 @@ Success Response
 ```
 
 ## STUDENT FUNCTIONALITIES
-#### GET ALL TUTORS TAKINS A PARTICULAR SUBJECT IN A CATEGORIE
+#### GET ALL TUTORS TAKING A PARTICULAR SUBJECT IN A CATEGORY
 
 __POST /tutors/:categoryId/:subjectId__
 
@@ -352,7 +352,7 @@ Success Response
 
 #### BOOK LESSON (STUDENT / ADMIN)
 
-__/POST /lesson__
+__POST /lesson__
 
 The `/lesson` endpoint  enable a student book lesson passing the parameters below.
 
@@ -382,7 +382,7 @@ Sample Success Response
 
 #### REGISTER TO TAKE A SUBJECT
 
-__/POST /subject/register/:categoryId/:subjectId__
+__POST /subject/register/:categoryId/:subjectId__
 
 The `/subject/register/:categoryId/:subjectId` endpoint  enable a tutor to register for a subject in a category.
 
@@ -404,8 +404,7 @@ Sample Success Response
 
 #### TUTOR  SEE ALL REGISTERED SUBJECTS 
 
-
-__/POST  /tutor/subjects__
+__POST  /tutor/subjects__
 
 The ` /tutor/subjects` endpoint  enable a tutor to register for a subject in a category.
 
@@ -438,7 +437,7 @@ Sample Success Response
 
 #### TUTOR TO UPDATE A REGISTERED SUBJECT
 
-__/PUT  /tutor/subject/:subjectId__
+__PUT  /tutor/subject/:subjectId__
 
 The ` /tutor/subject/:subjectId` endpoint  enable a tutor to update a registered subject.
 
@@ -460,9 +459,349 @@ Sample Success Response
 }
 ```
 
+#### TUTOR TO DELETE A REGISTERED SUBJECT
 
+__DELETE  /tutor/subject/:subjectId__
 
+The ` /tutor/subject/:subjectId` endpoint  enable a tutor to update a registered subject.
 
+Requires API Key as `x-access-token:""` in request header and a `userId parameter in the body`.
 
+Sample Request Paramter
+```
+{
+    "userId":"uiopoihjk23443jklkjhjk"
+}
+```
+Sample Success Response
+```
+{
+    "status": true,
+    "message": "Registered Subject Deleted successfully"
+}
+```
 
+### ADMIN FUNCTIONALITIES.
 
+#### CREATE SUBJECT 
+
+__POST /subject/create__
+
+The `/subject/create` endpoint  enable admin to create a subject in a category.
+
+Requires API Key as `x-access-token:""` in request header and a `userId parameter in the body`.
+
+Sample Request Paramter
+```
+{
+    "userId":"uiopoihjk23443jklkjhjk"
+    "subjectDescription":"this is a sample"
+    "subjectName":"Mathmatics"
+    "categoryId":"rtyuio23543oiyui34iu4ioiu3";
+}
+```
+Sample Success Response
+```
+{
+    "status": true,
+    "message": "Subject create successfully",
+    "subject": {
+        "tutors": [],
+        "_id": "5ebd7f8fafc6580310254cc2",
+        "subjectName": "civic education",
+        "subjectDescription": "this subject is about  civic education",
+        "category": "5ebd605e54b32b46245c0294",
+        "__v": 0
+    }
+}
+```
+
+#### UPDATE SUBJECT 
+
+__PUT /subject/:categoryId/:subjectId__
+
+The `/subject/:categoryId/:subjectId` endpoint  enable admin to update a subject.
+
+Requires API Key as `x-access-token:""` in request header and a `userId parameter in the body`.
+
+Sample Request Paramter
+```
+{
+    "userId":"uiopoihjk23443jklkjhjk"
+    "subjectDescription":"this is a sample"
+    "subjectName":"Mathmatics" 
+}
+```
+Sample Success Response
+```
+{
+    "status": true,
+    "message": "Subject create successfully",
+    "subject": {
+        "tutors": [],
+        "_id": "5ebd7f8fafc6580310254cc2",
+        "subjectName": "civic education",
+        "subjectDescription": "this subject is about  civic education",
+        "category": "5ebd605e54b32b46245c0294",
+        "__v": 0
+    }
+}
+```
+
+#### DELETE SUBJECT 
+
+__DELETE /subject/:categoryId/:subjectId__
+
+The `/subject/:categoryId/:subjectId` endpoint  enable an admin to delete a  subject.
+
+Requires API Key as `x-access-token:""` in request header and a `userId parameter in the body`.
+
+Sample Request Paramter
+```
+{
+    "userId":"uiopoihjk23443jklkjhjk"
+}
+```
+Sample Success Response
+```
+{
+    "status": true,
+    "message": "Subject Deleted successfully"
+}
+```
+
+#### DELETE CATEGORY 
+
+__DELETE /category/:categoryId__
+
+The `  /category/:categoryId  ` endpoint  enable an admin to delete a  category.
+
+Requires API Key as `x-access-token:""` in request header and a `userId parameter in the body`.
+
+Sample Request Paramter
+```
+{
+    "userId":"uiopoihjk23443jklkjhjk"
+}
+```
+Sample Success Response
+```
+{
+    "status": true,
+    "message": "Category Deleted successfully"
+}
+```
+#### GET ALL TUTORS
+
+__GET /tutors__ 
+
+The `/tutors` endpoint  enable an admin to retrieve all tutors.
+
+Requires API Key as `x-access-token:""` in request header and a `userId parameter in the body`.
+
+Sample Request Paramter
+```
+{
+    "userId":"uiopoihjk23443jklkjhjk"
+}
+```
+Sample Success Response
+```
+{
+    "status": true,
+    "tutors": [
+        {
+            "isAdmin": false,
+            "subjects": [],
+            "lessons": [
+                "5ebd97810680195374200c4a"
+            ],
+            "category": [],
+            "active": true,
+            "_id": "5ebd5321738f8b39cc53e12d",
+            "firstName": "tutor",
+            "lastName": "tech",
+            "password": "$2b$12$MM7IAshgtdzGshYbV6eyre1pHVsBdqgHsDbGrq0iAi29BqtrTg80.",
+            "gender": "male",
+            "email": "tutor1@gmail.com",
+            "phoneNumber": "09087563423",
+            "createdAt": "2020-05-14T14:18:09.714Z",
+            "updatedAt": "2020-05-14T20:40:03.271Z",
+            "__v": 0
+        }
+    ]
+}
+
+```
+#### GET TUTOR BY ID
+
+__GET  /tutor/:tutorId__
+
+The `/tutor/:tutorId` endpoint  enable an admin to get a tutor by id.
+
+Requires API Key as `x-access-token:""` in request header and a `userId parameter in the body`.
+
+Sample Request Paramter
+```
+{
+    "userId":"uiopoihjk23443jklkjhjk"
+}
+```
+Sample Success Response
+```
+{
+    "status": true,
+    "tutors": [
+        {
+            "isAdmin": false,
+            "subjects": [],
+            "lessons": [
+                "5ebd97810680195374200c4a"
+            ],
+            "category": [],
+            "active": true,
+            "_id": "5ebd5321738f8b39cc53e12d",
+            "firstName": "tutor",
+            "lastName": "tech",
+            "password": "$2b$12$MM7IAshgtdzGshYbV6eyre1pHVsBdqgHsDbGrq0iAi29BqtrTg80.",
+            "gender": "male",
+            "email": "tutor1@gmail.com",
+            "phoneNumber": "09087563423",
+            "createdAt": "2020-05-14T14:18:09.714Z",
+            "updatedAt": "2020-05-14T20:40:03.271Z",
+            "__v": 0
+        }
+    ]
+}
+
+```
+####  DEACTIVATE A TUTOR
+
+__GET /tutor/deactivate/:tutorId__
+
+The `/tutor/deactivate/:tutorId` endpoint  enable an admin to deactivate a  tutor.
+
+Requires API Key as `x-access-token:""` in request header and a `userId parameter in the body`.
+
+Sample Request Paramter
+```
+{
+    "userId":"uiopoihjk23443jklkjhjk"
+}
+```
+Sample Success Response
+```
+{
+    "status": true,
+    "message": "Tutor deactivated successfully"
+}
+```
+#### ALL LESSONS  
+__GET /lessons__
+
+The `/lessons` endpoint  enable an admin to retrieve all lessons.
+
+Requires API Key as `x-access-token:""` in request header and a `userId parameter in the body`.
+
+Sample Request Paramter
+```
+{
+    "userId":"uiopoihjk23443jklkjhjk"
+}
+```
+Sample Success Response
+```
+{
+    "status": true,
+    "lessons": [
+        {
+            "_id": "5ebd97810680195374200c4a",
+            "lessonDate": "2020-02-26T00:00:00.000Z",
+            "lessonName": "genelogy",
+            "lessonTime": "1:00pm",
+            "subject": "5ebd7f5aafc6580310254cc0",
+            "tutor": "5ebd5321738f8b39cc53e12d",
+            "student": "5ebd52e6738f8b39cc53e12c",
+            "__v": 0
+        }
+    ]
+}
+```
+
+#### LESSON BY ID
+__GET /lesson/:lessonId__
+
+The `/lesson/:lessonId` endpoint  enable an admin to retrieve a lesson by id.
+
+Requires API Key as `x-access-token:""` in request header and a `userId parameter in the body`.
+
+Sample Request Paramter
+```
+{
+    "userId":"uiopoihjk23443jklkjhjk"
+}
+```
+Sample Success Response
+```
+{
+    "status": true,
+    "lesson": [
+        {
+            "_id": "5ebd97810680195374200c4a",
+            "lessonDate": "2020-02-26T00:00:00.000Z",
+            "lessonName": "genelogy",
+            "lessonTime": "1:00pm",
+            "subject": "5ebd7f5aafc6580310254cc0",
+            "tutor": "5ebd5321738f8b39cc53e12d",
+            "student": "5ebd52e6738f8b39cc53e12c",
+            "__v": 0
+        }
+    ]
+}
+```
+#### UPDATE LESSSON 
+
+__PUT /lesson/:lessonId__
+
+The `/lesson/:lessonId` endpoint  enable admin to update a lesson.
+
+Requires API Key as `x-access-token:""` in request header and a `userId parameter in the body` with other parameters.
+
+Sample Request Paramter
+```
+{
+    "userId":"uiopoihjk23443jklkjhjk"
+    "name":"vlesson";
+    "date":"2020-02-22";
+    "time":"11:00pm";
+    "tutorId":"eere4343gdsbfb";
+}
+```
+Sample Success Response
+```
+{
+    "status": true,
+    "message": "Lesson updated successfully"
+}
+```
+
+#### DELETE SUBJECT 
+
+__DELETE /lesson/:lessonId__
+
+The `/lesson/:lessonId` endpoint  enable an admin to delete a  lesson ;
+Requires API Key as `x-access-token:""` in request header and a `userId parameter in the body`.
+
+Sample Request Paramter
+```
+{
+    "userId":"uiopoihjk23443jklkjhjk"
+}
+```
+Sample Success Response
+```
+{
+    "status": true,
+    "message": "lesson deleted successfully"
+}
+```

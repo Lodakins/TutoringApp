@@ -121,14 +121,13 @@ exports.updatedSubject=(req,res,next)=>{
     let subjectId = req.params.subjectId;
     let name = req.body.subjectName;
     let description = req.body.subjectDescription;
-    let categoryId= req.body.categoryId;
     let userId= req.body.userId;
     let obj={};
     if(!subjectId){
         return res.send({status:false,message:"subjectId is missing"});
     }
 
-    if(name || categoryId || description){
+    if(name || description){
           name  ? obj.subjectName=name : "";
           categoryId ? obj.category=categoryId :"";
           description ? obj.subjectDescription=description :"";
@@ -179,7 +178,7 @@ exports.deleteSubject=(req,res,next)=>{
         }
     },{ new: true, useFindAndModify: false }).then(result=>{
         if(result){
-            return res.send({status:true,message:"Registered Subjectd Deleted successfully"});
+            return res.send({status:true,message:"Registered Subjectd Delete successfully"});
         }
     }).catch(err=>{
         return res.send({status:true,message:err});
@@ -191,7 +190,7 @@ exports.deleteSubject=(req,res,next)=>{
 exports.deletedSuj=(req,res,next)=>{
 
     let subjectId = req.params.subjectId;
-    let categoryId= req.body.categoryId;
+    let categoryId= req.params.categoryId;
 
     if(!categoryId || !subjectId){
         return res.send({status:false,message:"One or more empty paramters"});
@@ -269,16 +268,20 @@ return res.send({status:false,message:"Invalid Category Id"})
 exports.updateSubject=(req,res,next)=>{
     let subjectId = req.params.subjectId;
     let name = req.body.subjectName;
-    let categoryId= req.body.categoryId;
+    let description= req.body.subjectDescription;
+    let categoryId= req.params.categoryId;
     let userId= req.body.userId;
     let obj={};
-    if(!subjectId){
+    if(!subjectId ){
         return res.send({status:false,message:"subjectId is missing"});
     }
+    if( !categoryId){
+        return res.send({status:false,message:"categoryId is missing"});
+    }
 
-    if(name || categoryId){
+    if(name  || description){
           name  ? obj.subjectName=name : "";
-          categoryId ? obj.category=categoryId :"";
+          description ? obj.subjectDescription=description :"";
 
           Categories.findOne({_id:categoryId}).select("-_id subjects").exec().then(result=>{
             let response = result.subjects;
