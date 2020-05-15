@@ -3,7 +3,7 @@ This project is a restful api developed for integrating with the backend of the 
 ### Current Version
 The current version of this api is version 1 (v1)
 ### Root Endpoint
-The root end point for the api is 
+The root end point for the api is  ` __https://glacial-brook-30590.herokuapp.com/v1+__ `
 ### Authentication
 Apart from the register and login endpoints, an API Key is required to be sent as part of every request to the backend, in the form of an ` x-access-token` request header.it is generated when you login use successfully login.
 
