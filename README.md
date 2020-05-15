@@ -785,7 +785,7 @@ Sample Success Response
 }
 ```
 
-#### DELETE SUBJECT 
+#### DELETE LESSON 
 
 __DELETE /lesson/:lessonId__
 
