@@ -7,6 +7,9 @@ The root end point for the api is  ` __https://glacial-brook-30590.herokuapp.com
 ### Authentication
 Apart from the register and login endpoints, an API Key is required to be sent as part of every request to the backend, in the form of an ` x-access-token` request header.it is generated when you login use successfully login.
 
+### ADMIN DETAILS 
+Admin details are found in the middlware folder called admin.txt 
+
 ### Request and Resoponse Sample
 
 Request paramter can be JSON or url encoded paramter
